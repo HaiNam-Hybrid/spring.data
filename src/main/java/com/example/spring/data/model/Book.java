@@ -1,6 +1,8 @@
 package com.example.spring.data.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import java.util.HashSet;
@@ -17,6 +19,18 @@ public class Book {
 
     private Long quantity;
 
+    private Long price;
+
+//    @ManyToOne
+//    @JoinColumn(name = "author_id")
+//    private Author author;
+
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    @JoinColumn(name = "author_id", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+//    @JsonIgnore
+    private Author author;
+
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "book_category",
@@ -28,9 +42,11 @@ public class Book {
     public Book() {
     }
 
-    public Book(String bookName, Long quantity, Set<Category> categories) {
+    public Book(String bookName, Long quantity, Long price, Author author, Set<Category> categories) {
         this.bookName = bookName;
         this.quantity = quantity;
+        this.price = price;
+        this.author = author;
         this.categories = categories;
     }
 
@@ -56,6 +72,22 @@ public class Book {
 
     public void setQuantity(Long quantity) {
         this.quantity = quantity;
+    }
+
+    public Long getPrice() {
+        return price;
+    }
+
+    public void setPrice(Long price) {
+        this.price = price;
+    }
+
+    public Author getAuthor() {
+        return author;
+    }
+
+    public void setAuthor(Author author) {
+        this.author = author;
     }
 
     public Set<Category> getCategories() {
