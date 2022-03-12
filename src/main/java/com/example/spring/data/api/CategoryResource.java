@@ -32,11 +32,7 @@ public class CategoryResource {
 
     @PutMapping("/category/update")
     public ResponseEntity<Category> updateAuthor(@RequestBody Category category) {
-        if (category.getId() == null) {
-            throw new NullPointerException("Id null: {}");
-        } else {
             Category result = categoryService.updateCategory(category);
             return ResponseEntity.ok().body(result);
-        }
     }
 }

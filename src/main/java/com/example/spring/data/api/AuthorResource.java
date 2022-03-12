@@ -27,11 +27,7 @@ public class AuthorResource {
 
     @PutMapping("/author/update")
     public ResponseEntity<Author> updateAuthor(@RequestBody Author author) {
-        if (author.getId() == null) {
-            throw new NullPointerException("Id null: {}");
-        } else {
             Author result = authorService.saveAuthor(author);
             return ResponseEntity.ok().body(result);
-        }
     }
 }
