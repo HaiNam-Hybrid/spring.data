@@ -54,12 +54,17 @@ public class MemberServiceImpl implements MemberService {
     @Override
     @Transactional
     public List<MemberHired> saveAll(List<MemberHired> memberHiredList) {
-        memberHiredList.stream().forEach(item ->{
+        memberHiredList.stream().forEach(item -> {
             Book book = bookRepo.findById(item.getBookId()).orElseThrow(()->new NullPointerException("No book in database"));
             Long total = book.getQuantity();
             book.setQuantity(total - item.getQuantity());
             bookRepo.save(book);
         });
         return memberHiredRepo.saveAll(memberHiredList);
+    }
+
+    @Override
+    public void giveBackBook(Long id) {
+        memberHiredRepo.deleteById(id);
     }
 }

@@ -43,4 +43,9 @@ public class MemberResource {
         List<MemberHired> result = memberService.findMemberHiredBook(id);
         return ResponseEntity.ok().body(result);
     }
+
+    @DeleteMapping("/member/return/{id}")
+    public void  giveBackBook(@PathVariable(name = "id") Long id) {
+        memberService.giveBackBook(id);
+    }
 }

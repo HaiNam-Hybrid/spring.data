@@ -9,4 +9,5 @@ import java.util.List;
 @Repository
 public interface MemberHiredRepo extends JpaRepository<MemberHired, Long> {
     List<MemberHired> findByMemberIdCard(String idCard);
+    void deleteById(Long id);
 }
