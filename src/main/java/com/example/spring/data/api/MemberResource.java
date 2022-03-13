@@ -1,6 +1,7 @@
 package com.example.spring.data.api;
 
 import com.example.spring.data.model.Member;
+import com.example.spring.data.model.MemberHired;
 import com.example.spring.data.service.MemberService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -28,6 +29,18 @@ public class MemberResource {
     @PutMapping("/member/update")
     public ResponseEntity<Member> updateAuthor(@RequestBody Member member) {
         Member result = memberService.updateMember(member);
+        return ResponseEntity.ok().body(result);
+    }
+
+    @PostMapping("/member/hired")
+    public ResponseEntity<List<MemberHired>> hiredBook(@RequestBody List<MemberHired> memberHiredList) {
+        List<MemberHired> result = memberService.saveAll(memberHiredList);
+        return ResponseEntity.ok().body(result);
+    }
+
+    @GetMapping("/member/hired/{id}")
+    public ResponseEntity<List<MemberHired>> allHiredBook(@PathVariable(name ="id") String id) {
+        List<MemberHired> result = memberService.findMemberHiredBook(id);
         return ResponseEntity.ok().body(result);
     }
 }
