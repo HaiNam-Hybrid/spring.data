@@ -26,8 +26,8 @@ public class AuthorResource {
     }
 
     @PutMapping("/author/update")
-    public ResponseEntity<Author> updateAuthor(@RequestBody Author author) {
-            Author result = authorService.saveAuthor(author);
+    public ResponseEntity<List<Author>> updateAuthor(@RequestBody List<Author> authors) {
+        List<Author> result = authorService.saveAuthor(authors);
             return ResponseEntity.ok().body(result);
     }
 }

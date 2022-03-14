@@ -56,6 +56,7 @@ public class MemberServiceImpl implements MemberService {
     public List<MemberHired> saveAll(List<MemberHired> memberHiredList) {
         memberHiredList.stream().forEach(item -> {
             Book book = bookRepo.findById(item.getBookId()).orElseThrow(()->new NullPointerException("No book in database"));
+            item.setBookName(book.getBookName());
             Long total = book.getQuantity();
             book.setQuantity(total - item.getQuantity());
             bookRepo.save(book);

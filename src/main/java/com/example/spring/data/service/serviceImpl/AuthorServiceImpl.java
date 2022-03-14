@@ -30,7 +30,7 @@ public class AuthorServiceImpl implements AuthorService {
     }
 
     @Override
-    public Author saveAuthor(Author author){
-        return authorRepo.save(author);
+    public List<Author> saveAuthor(List<Author> authors){
+        return authorRepo.saveAll(authors);
     }
 }

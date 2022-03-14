@@ -11,5 +11,5 @@ public interface AuthorService {
     List<Author> findByNameLike(String name);
     List<Author> findAll();
 
-    Author saveAuthor(Author author);
+    List<Author> saveAuthor(List<Author> authors);
 }
