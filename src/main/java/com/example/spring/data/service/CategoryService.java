@@ -10,5 +10,6 @@ public interface CategoryService {
     List<Category> findAllCategories();
     List<Category> findByNameCategory(String name);
     Optional<Category> findById(Long id);
-    Category updateCategory(Category category);
+    List<Category> createCategory(List<Category> categories);
+    Category findByCategoryName(String name);
 }

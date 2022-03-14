@@ -29,7 +29,12 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public Category updateCategory(Category category) {
-        return categoryRepo.save(category);
+    public List<Category> createCategory(List<Category> categories) {
+        return categoryRepo.saveAll(categories);
+    }
+
+    @Override
+    public Category findByCategoryName(String name) {
+        return categoryRepo.findByCategoryName(name);
     }
 }

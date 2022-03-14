@@ -10,6 +10,7 @@ public interface MemberService {
     Member findMember(String idCard);
     List<Member> findMemberNameLike(String name);
     List<Member> findAllMembers();
+    List<Member> createMember(List<Member> members);
     Member updateMember(Member member);
     List<MemberHired> findMemberHiredBook(String memberIdCard);
     List<MemberHired> saveAll(List<MemberHired> memberHiredList);

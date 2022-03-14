@@ -10,6 +10,7 @@ public interface AuthorService {
    Optional<Author>  findById(Long id);
     List<Author> findByNameLike(String name);
     List<Author> findAll();
-
-    List<Author> saveAuthor(List<Author> authors);
+    List<Author> createAuthor(List<Author> authors);
+    Author updateAuthor(Author author);
+    Author findByName(String name);
 }

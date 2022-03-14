@@ -30,7 +30,23 @@ public class AuthorServiceImpl implements AuthorService {
     }
 
     @Override
-    public List<Author> saveAuthor(List<Author> authors){
+    public List<Author> createAuthor(List<Author> authors){
         return authorRepo.saveAll(authors);
+    }
+
+    @Override
+    public Author updateAuthor(Author author) {
+//        Author oldAuthor = authorRepo.findById(author.getId()).orElseThrow(()->new NullPointerException("No Author in database"));
+        Optional<Author> oldAuthor = authorRepo.findById(author.getId());
+        if (oldAuthor.isPresent()) {
+            return authorRepo.save(author);
+        } else {
+            throw new NullPointerException("Author id wrong!");
+        }
+    }
+
+    @Override
+    public Author findByName(String name) {
+        return authorRepo.findByAuthorName(name);
     }
 }

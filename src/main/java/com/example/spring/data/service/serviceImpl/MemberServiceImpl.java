@@ -42,6 +42,11 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
+    public List<Member> createMember(List<Member> members) {
+        return memberRepo.saveAll(members);
+    }
+
+    @Override
     public Member updateMember(Member member) {
         return memberRepo.save(member);
     }

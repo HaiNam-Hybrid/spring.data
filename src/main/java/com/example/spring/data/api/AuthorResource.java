@@ -25,9 +25,15 @@ public class AuthorResource {
         return new ResponseEntity<>(authorService.findByNameLike(name), HttpStatus.OK) ;
     }
 
-    @PutMapping("/author/update")
-    public ResponseEntity<List<Author>> updateAuthor(@RequestBody List<Author> authors) {
-        List<Author> result = authorService.saveAuthor(authors);
+    @PostMapping("/author/create")
+    public ResponseEntity<List<Author>> createAuthor(@RequestBody List<Author> authors) {
+        List<Author> result = authorService.createAuthor(authors);
             return ResponseEntity.ok().body(result);
+    }
+
+    @PutMapping("/author/update")
+    public ResponseEntity<Author> updateAuthor(@RequestBody Author author) {
+        Author result = authorService.updateAuthor(author);
+        return ResponseEntity.ok().body(result);
     }
 }

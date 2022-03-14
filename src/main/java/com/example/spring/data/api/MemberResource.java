@@ -26,6 +26,12 @@ public class MemberResource {
         return new ResponseEntity<>(memberService.findMemberNameLike(name), HttpStatus.OK) ;
     }
 
+    @PostMapping("/member/create")
+    public ResponseEntity<List<Member>> createMember(@RequestBody List<Member> members) {
+        List<Member> result = memberService.createMember(members);
+        return ResponseEntity.ok().body(result);
+    }
+
     @PutMapping("/member/update")
     public ResponseEntity<Member> updateAuthor(@RequestBody Member member) {
         Member result = memberService.updateMember(member);

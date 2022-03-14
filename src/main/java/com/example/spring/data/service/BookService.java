@@ -10,5 +10,6 @@ public interface BookService {
     List<Book> findByNameBook(String name);
     Optional<Book> findById(Long id);
     List<Book> findAllBooks();
+    List<Book> createBook(List<Book> books);
     Book updateBook(Book book);
 }

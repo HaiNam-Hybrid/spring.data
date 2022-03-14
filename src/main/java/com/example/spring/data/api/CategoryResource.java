@@ -30,9 +30,9 @@ public class CategoryResource {
         }
     }
 
-    @PutMapping("/category/update")
-    public ResponseEntity<Category> updateAuthor(@RequestBody Category category) {
-            Category result = categoryService.updateCategory(category);
+    @PostMapping("/category/update")
+    public ResponseEntity<List<Category>> updateAuthor(@RequestBody List<Category> categories) {
+        List<Category> result = categoryService.createCategory(categories);
             return ResponseEntity.ok().body(result);
     }
 }
