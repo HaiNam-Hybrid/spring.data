@@ -48,28 +48,49 @@ public class BookResource {
     @PutMapping("/book/update")
     @Transactional
     public ResponseEntity<Book> updateBook(@RequestBody Book book) {
-        //check author exist
-        Author author = authorService.findByName(book.getAuthor().getAuthorName());
         Set<Category> categories = book.getCategories();
         Set<Category> categorySet = new HashSet<>();
         List<Category> categoryList = new ArrayList<>();
         //check category exist, create new category if category's name is new
-        categories.stream().forEach(item ->{
-            Category category = categoryService.findByCategoryName(item.getCategoryName());
-            if (category != null) {
-                categorySet.add(category);
-            } else {
-                categoryList.add(item);
-                categoryService.createCategory(categoryList);
-                categorySet.add(item);
+        if (categories.size() > 0) {
+            categories.stream().forEach(item ->{
+                Category category = categoryService.findByCategoryName(item.getCategoryName());
+                if (category != null) {
+                    categorySet.add(category);
+                } else {
+                    categoryList.add(item);
+                    categoryService.createCategory(categoryList);
+                    categorySet.add(item);
+                }
+                book.setCategories(categorySet);
+            });
+        }
+// check author exist to create if new author name
+        if (book.getAuthor().getAuthorName() != "") {
+            Author author = authorService.findByName(book.getAuthor().getAuthorName());
+            if (author != null) {
+                book.setAuthor(author);
             }
-            book.setCategories(categorySet);
-        });
-// check author to create if new author name
-        if (author != null) {
-            book.setAuthor(author);
+            else if (book.getAuthor().getId() == null) {
+                authorService.addAuthor(book.getAuthor());
+                Author newAuthor = authorService.findByName(book.getAuthor().getAuthorName());
+                book.setAuthor(newAuthor);
+            }
+            else {
+                Author opAuthor = authorService.findById(book.getAuthor().getId()).orElseThrow(()-> new NullPointerException("Id author is wrong!!!"));
+                book.setAuthor(opAuthor);
+            }
         } else {
-            authorService.updateAuthor(book.getAuthor());
+            Author anoAuthor = authorService.findByName("ANONYMOUS");
+            if (anoAuthor != null) {
+                book.setAuthor(anoAuthor);
+            } else {
+                Author anonymous = new Author();
+                anonymous.setAuthorName("ANONYMOUS");
+                authorService.addAuthor(anonymous);
+                Author ano = authorService.findByName("ANONYMOUS");
+                book.setAuthor(ano);
+            }
         }
         Book result = bookService.updateBook(book);
         return ResponseEntity.ok().body(result);

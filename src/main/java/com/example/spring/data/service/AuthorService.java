@@ -13,4 +13,5 @@ public interface AuthorService {
     List<Author> createAuthor(List<Author> authors);
     Author updateAuthor(Author author);
     Author findByName(String name);
+    Author addAuthor(Author author);
 }
