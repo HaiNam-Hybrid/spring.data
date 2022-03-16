@@ -70,6 +70,11 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
+    public List<MemberHired> findAllMemberHired() {
+        return memberHiredRepo.findAll();
+    }
+
+    @Override
     public void giveBackBook(Long id) {
         memberHiredRepo.deleteById(id);
     }

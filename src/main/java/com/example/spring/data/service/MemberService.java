@@ -14,5 +14,6 @@ public interface MemberService {
     Member updateMember(Member member);
     List<MemberHired> findMemberHiredBook(String memberIdCard);
     List<MemberHired> saveAll(List<MemberHired> memberHiredList);
+    List<MemberHired> findAllMemberHired();
     void giveBackBook(Long id);
 }

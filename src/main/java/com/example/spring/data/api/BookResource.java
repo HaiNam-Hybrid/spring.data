@@ -40,7 +40,7 @@ public class BookResource {
     }
 
     @PostMapping("/book/create")
-    public ResponseEntity<List<Book>> updateAuthor(@RequestBody List<Book> books) {
+    public ResponseEntity<List<Book>> createBook(@RequestBody List<Book> books) {
         List<Book> result = bookService.createBook(books);
         return ResponseEntity.ok().body(result);
     }
