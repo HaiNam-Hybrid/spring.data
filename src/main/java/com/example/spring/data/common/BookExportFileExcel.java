@@ -57,6 +57,11 @@ public class BookExportFileExcel {
         cell.setCellValue("Description");
         cell.setCellStyle(style);
         sheet.autoSizeColumn(4);
+
+        cell = row.createCell(5);
+        cell.setCellValue("Category");
+        cell.setCellStyle(style);
+        sheet.autoSizeColumn(5);
     }
 
     public void writeData() {
@@ -73,7 +78,12 @@ public class BookExportFileExcel {
             cell.setCellValue(book.getAuthor().getAuthorName());
             cell = row.createCell(4);
             cell.setCellValue(book.getAuthor().getDescription());
-
+            StringBuffer output = new StringBuffer(110);
+            book.getCategories().stream().forEach(item ->{
+                output.append(item.getCategoryName() +", ");
+            });
+            cell = row.createCell(5);
+            cell.setCellValue(output.toString());
             cnt++;
         }
     }
