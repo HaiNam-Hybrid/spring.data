@@ -61,9 +61,9 @@ public class ReadFileExcel {
             Long pr = price.longValue();
             Author author = new Author(authorName, authorDescription);
             Category category = new Category(categoryName);
-            Set<Category> ctgr = new HashSet<>();
-            ctgr.add(category);
-            Book book = new Book(bookName, qt, pr, author, ctgr);
+            Set<Category> ctg = new HashSet<>();
+            ctg.add(category);
+            Book book = new Book(bookName, qt, pr, author, ctg);
             books.add(book);
         }
         return books;

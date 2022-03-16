@@ -1,6 +1,7 @@
 package com.example.spring.data.api;
 
 import com.example.spring.data.common.AuthorExportFileExcel;
+import com.example.spring.data.common.BookExportFileExcel;
 import com.example.spring.data.common.HiredExportFileExcel;
 import com.example.spring.data.common.ReadFileExcel;
 import com.example.spring.data.model.Author;
@@ -82,6 +83,21 @@ public class FileResource {
         List<Book> books = ReadFileExcel.readFileBooks(ConvertObject.convertMultipartToFile(file));
         List<Book> result = bookService.createBook(books);
         return ResponseEntity.ok().body(result);
+    }
+
+    @GetMapping("/book/export")
+    public ResponseEntity<?> exportBookToExcel(HttpServletResponse res) throws IOException {
+        res.setContentType("application/octet-stream");
+        String headerKey = "Content-Disposition";
+        String headerValue = "attachement; filename=books_list.xlsx";
+        res.setHeader(headerKey, headerValue);
+        //data
+        List<Book> books = bookService.findAllBooks();
+        //call method export
+        BookExportFileExcel bookExportFileExcel = new BookExportFileExcel(books);
+        bookExportFileExcel.export(res);
+
+        return ResponseEntity.ok("Export success");
     }
 
 }
