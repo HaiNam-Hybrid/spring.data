@@ -21,10 +21,6 @@ public class Book {
 
     private Long price;
 
-//    @ManyToOne
-//    @JoinColumn(name = "author_id")
-//    private Author author;
-
     @ManyToOne(fetch = FetchType.EAGER, optional = false, cascade=CascadeType.ALL)
     @JoinColumn(name = "author_id", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)

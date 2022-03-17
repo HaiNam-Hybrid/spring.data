@@ -1,11 +1,16 @@
 package com.example.spring.data.api;
 
+import com.example.spring.data.model.Book;
 import com.example.spring.data.model.Member;
 import com.example.spring.data.model.MemberHired;
+import com.example.spring.data.repository.BookRepo;
+import com.example.spring.data.repository.MemberHiredRepo;
+import com.example.spring.data.service.BookService;
 import com.example.spring.data.service.MemberService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -15,6 +20,12 @@ import java.util.List;
 public class MemberResource {
     @Autowired
     MemberService memberService;
+    @Autowired
+    BookService bookService;
+    @Autowired
+    BookRepo bookRepo;
+    @Autowired
+    MemberHiredRepo memberHiredRepo;
 
     @GetMapping("/member/all")
     public ResponseEntity<List<Member>> getAllAuthor() {
@@ -51,7 +62,12 @@ public class MemberResource {
     }
 
     @DeleteMapping("/member/return/{id}")
+    @Transactional
     public void  giveBackBook(@PathVariable(name = "id") Long id) {
+        MemberHired memberHired = memberHiredRepo.findById(id).orElseThrow(()-> new NullPointerException("No record data"));
+        Book book = bookRepo.findById(memberHired.getBookId()).orElseThrow(()-> new NullPointerException("No book in database"));
+        book.setQuantity(book.getQuantity() + memberHired.getQuantity());
+        bookService.updateBook(book);
         memberService.giveBackBook(id);
     }
 }
