@@ -13,6 +13,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @RestController
@@ -69,5 +73,31 @@ public class MemberResource {
         book.setQuantity(book.getQuantity() + memberHired.getQuantity());
         bookService.updateBook(book);
         memberService.giveBackBook(id);
+    }
+//dung ra la chi request bookID, cac thong tin con lai se lay cua user dang login trong he thong
+//tam thoi se request ca body member hired de test api
+    @PostMapping("/member/request/hired")
+    public ResponseEntity<MemberHired> requestHireBook(@RequestBody MemberHired memberHired) {
+        MemberHired result = memberService.requestHireBook(memberHired);
+        return ResponseEntity.ok().body(result);
+    }
+
+    @PostMapping("/admin/approve/request/{id}")
+    @Transactional
+    public ResponseEntity<?> approveRequest(@PathVariable(name = "id") Long id) {
+        Instant startTime =Instant.parse(DateTimeFormatter.ofPattern("yyyy-MM-dd")
+                .withZone(ZoneId.systemDefault())
+                .format(Instant.now().atZone(ZoneOffset.UTC))+"T00:00:00.883Z");
+        Instant endTime = Instant.parse(DateTimeFormatter.ofPattern("yyyy-MM-dd")
+                .withZone(ZoneId.systemDefault())
+                .format(Instant.now().atZone(ZoneOffset.UTC).plusDays(7).toInstant())+"T23:59:59.883Z");
+        MemberHired memberHired = memberService.findRecordById(id);
+        memberHired.setStartTimeHired(startTime);
+        memberHired.setEndTimeHired(endTime);
+        memberHired.setForfeit(0l);
+        Long price = bookRepo.getById(memberHired.getBookId()).getPrice();
+        memberHired.setUnitPrice(price);
+        MemberHired result = memberService.approved(memberHired);
+        return ResponseEntity.ok().body(result);
     }
 }
