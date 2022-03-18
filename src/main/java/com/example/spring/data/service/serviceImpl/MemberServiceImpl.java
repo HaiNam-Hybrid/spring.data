@@ -13,6 +13,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Instant;
+import java.time.ZoneOffset;
 import java.util.List;
 import java.util.Optional;
 
@@ -70,12 +72,49 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
+    public List<MemberHired> scheduleUpdateAll() {
+        List<MemberHired> memberHiredList = this.findAllMemberHired();
+        memberHiredList.stream().forEach(item -> {
+            if (item.getEndTimeHired() != null) {
+               Instant endTime = item.getEndTimeHired();
+               Instant scheduleTime = Instant.now();
+               System.out.println("So sanh time: " +endTime+ "   " +scheduleTime);
+               boolean check = endTime.isBefore(scheduleTime);
+               if (check) {
+                   Instant newEndTime = endTime.atZone(ZoneOffset.UTC).plusDays(1).toInstant();
+                   Long forfeit = item.getUnitPrice() + item.getForfeit();
+                   System.out.println("Endtime new: " +newEndTime);
+                   item.setForfeit(forfeit);
+                   item.setEndTimeHired(newEndTime);
+               }
+            }
+        });
+        return memberHiredRepo.saveAll(memberHiredList);
+    }
+
+    @Override
     public List<MemberHired> findAllMemberHired() {
         return memberHiredRepo.findAll();
     }
 
     @Override
+    public MemberHired requestHireBook(MemberHired memberHired) {
+        return memberHiredRepo.save(memberHired);
+    }
+
+    @Override
+    public MemberHired approved(MemberHired memberHired) {
+
+        return memberHiredRepo.save(memberHired);
+    }
+
+    @Override
+    public MemberHired findRecordById(Long id) {
+        return memberHiredRepo.findById(id).orElseThrow(()-> new NullPointerException("Record this id is not exist"));
+    }
+
+    @Override
     public void giveBackBook(Long id) {
-        memberHiredRepo.deleteById(id);
+       memberHiredRepo.deleteById(id);
     }
 }

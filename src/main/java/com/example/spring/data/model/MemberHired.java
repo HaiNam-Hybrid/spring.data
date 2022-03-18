@@ -1,7 +1,7 @@
 package com.example.spring.data.model;
 
 import javax.persistence.*;
-import java.util.Set;
+import java.time.Instant;
 
 @Entity
 @Table(name = "member_hired_books")
@@ -18,15 +18,27 @@ public class MemberHired {
 
     private Long quantity;
 
+    private Long unitPrice;
+
+    private Long forfeit;
+
+    private Instant startTimeHired;
+
+    private Instant endTimeHired;
+
     public MemberHired() {
     }
 
-    public MemberHired(String memberIdCard, String bookName, Long bookId, Long quantity) {
-
+    public MemberHired(String memberIdCard, String bookName, Long bookId, Long quantity,
+                       Long unitPrice, Long forfeit, Instant startTimeHired, Instant endTimeHired) {
         this.memberIdCard = memberIdCard;
         this.bookName = bookName;
         this.bookId = bookId;
         this.quantity = quantity;
+        this.unitPrice = unitPrice;
+        this.forfeit = forfeit;
+        this.startTimeHired = startTimeHired;
+        this.endTimeHired = endTimeHired;
     }
 
     public Long getId() {
@@ -67,5 +79,37 @@ public class MemberHired {
 
     public void setQuantity(Long quantity) {
         this.quantity = quantity;
+    }
+
+    public Long getUnitPrice() {
+        return unitPrice;
+    }
+
+    public void setUnitPrice(Long unitPrice) {
+        this.unitPrice = unitPrice;
+    }
+
+    public Long getForfeit() {
+        return forfeit;
+    }
+
+    public void setForfeit(Long forfeit) {
+        this.forfeit = forfeit;
+    }
+
+    public Instant getStartTimeHired() {
+        return startTimeHired;
+    }
+
+    public void setStartTimeHired(Instant startTimeHired) {
+        this.startTimeHired = startTimeHired;
+    }
+
+    public Instant getEndTimeHired() {
+        return endTimeHired;
+    }
+
+    public void setEndTimeHired(Instant endTimeHired) {
+        this.endTimeHired = endTimeHired;
     }
 }
