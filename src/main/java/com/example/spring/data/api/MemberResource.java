@@ -10,6 +10,7 @@ import com.example.spring.data.service.MemberService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
@@ -32,12 +33,13 @@ public class MemberResource {
     MemberHiredRepo memberHiredRepo;
 
     @GetMapping("/member/all")
-    public ResponseEntity<List<Member>> getAllAuthor() {
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_MODERATOR')")
+    public ResponseEntity<List<Member>> getAllMember() {
         return new ResponseEntity<>(memberService.findAllMembers(), HttpStatus.OK) ;
     }
 
     @GetMapping("/member/{name}")
-    public ResponseEntity<List<Member>> searchAuthorNameLike(@PathVariable(name = "name") String name) {
+    public ResponseEntity<List<Member>> searchMemberNameLike(@PathVariable(name = "name") String name) {
         return new ResponseEntity<>(memberService.findMemberNameLike(name), HttpStatus.OK) ;
     }
 
@@ -48,16 +50,16 @@ public class MemberResource {
     }
 
     @PutMapping("/member/update")
-    public ResponseEntity<Member> updateAuthor(@RequestBody Member member) {
+    public ResponseEntity<Member> updateMember(@RequestBody Member member) {
         Member result = memberService.updateMember(member);
         return ResponseEntity.ok().body(result);
     }
 
-    @PostMapping("/member/hired")
-    public ResponseEntity<List<MemberHired>> hiredBook(@RequestBody List<MemberHired> memberHiredList) {
-        List<MemberHired> result = memberService.saveAll(memberHiredList);
-        return ResponseEntity.ok().body(result);
-    }
+//    @PostMapping("/member/hired")
+//    public ResponseEntity<List<MemberHired>> hiredBook(@RequestBody List<MemberHired> memberHiredList) {
+//        List<MemberHired> result = memberService.saveAll(memberHiredList);
+//        return ResponseEntity.ok().body(result);
+//    }
 
     @GetMapping("/member/hired/{id}")
     public ResponseEntity<List<MemberHired>> allHiredBook(@PathVariable(name ="id") String id) {

@@ -20,4 +20,5 @@ public interface MemberService {
     MemberHired approved(MemberHired memberHired);
     MemberHired findRecordById(Long id);
     void giveBackBook(Long id);
+    Member getCurrentMember();
 }

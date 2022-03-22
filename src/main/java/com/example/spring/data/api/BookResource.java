@@ -24,6 +24,7 @@ public class BookResource {
     CategoryService categoryService;
     @Autowired
     AuthorService authorService;
+
     @GetMapping("/book/getAll")
     public ResponseEntity<List<Book>> getAllBooks() {
         return new ResponseEntity<>(bookService.findAllBooks(), HttpStatus.OK);
