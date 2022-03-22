@@ -9,6 +9,7 @@ import com.example.spring.data.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
@@ -41,12 +42,14 @@ public class BookResource {
     }
 
     @PostMapping("/book/create")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_MODERATOR')")
     public ResponseEntity<List<Book>> createBook(@RequestBody List<Book> books) {
         List<Book> result = bookService.createBook(books);
         return ResponseEntity.ok().body(result);
     }
 
     @PutMapping("/book/update")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_MODERATOR')")
     @Transactional
     public ResponseEntity<Book> updateBook(@RequestBody Book book) {
         Set<Category> categories = book.getCategories();

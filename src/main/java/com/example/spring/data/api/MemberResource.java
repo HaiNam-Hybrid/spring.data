@@ -1,8 +1,6 @@
 package com.example.spring.data.api;
 
-import com.example.spring.data.model.Book;
-import com.example.spring.data.model.Member;
-import com.example.spring.data.model.MemberHired;
+import com.example.spring.data.model.*;
 import com.example.spring.data.repository.BookRepo;
 import com.example.spring.data.repository.MemberHiredRepo;
 import com.example.spring.data.service.BookService;
@@ -19,6 +17,8 @@ import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api")
@@ -39,20 +39,31 @@ public class MemberResource {
     }
 
     @GetMapping("/member/{name}")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_MODERATOR')")
     public ResponseEntity<List<Member>> searchMemberNameLike(@PathVariable(name = "name") String name) {
         return new ResponseEntity<>(memberService.findMemberNameLike(name), HttpStatus.OK) ;
     }
 
     @PostMapping("/member/create")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN')")
     public ResponseEntity<List<Member>> createMember(@RequestBody List<Member> members) {
         List<Member> result = memberService.createMember(members);
         return ResponseEntity.ok().body(result);
     }
 
     @PutMapping("/member/update")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_USER')")
     public ResponseEntity<Member> updateMember(@RequestBody Member member) {
-        Member result = memberService.updateMember(member);
-        return ResponseEntity.ok().body(result);
+        //only current user edit current user's profile or edited by admin
+        Member currentUser = memberService.getCurrentMember();
+        Set<Role> roles = currentUser.getRoles();
+        boolean match = roles.stream().map(Role::getName).collect(Collectors.toList()).contains(ERole.ROLE_ADMIN);
+        if (match || currentUser.getId() == member.getId()) {
+            Member result = memberService.updateMember(member);
+            return ResponseEntity.ok().body(result);
+        } else {
+            return ResponseEntity.badRequest().build();
+        }
     }
 
 //    @PostMapping("/member/hired")
@@ -62,12 +73,14 @@ public class MemberResource {
 //    }
 
     @GetMapping("/member/hired/{id}")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_MODERATOR')")
     public ResponseEntity<List<MemberHired>> allHiredBook(@PathVariable(name ="id") String id) {
         List<MemberHired> result = memberService.findMemberHiredBook(id);
         return ResponseEntity.ok().body(result);
     }
 
     @DeleteMapping("/member/return/{id}")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN')")
     @Transactional
     public void  giveBackBook(@PathVariable(name = "id") Long id) {
         MemberHired memberHired = memberHiredRepo.findById(id).orElseThrow(()-> new NullPointerException("No record data"));
@@ -85,6 +98,7 @@ public class MemberResource {
     }
 
     @PostMapping("/admin/approve/request/{id}")
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN')")
     @Transactional
     public ResponseEntity<?> approveRequest(@PathVariable(name = "id") Long id) {
         Instant startTime =Instant.parse(DateTimeFormatter.ofPattern("yyyy-MM-dd")
