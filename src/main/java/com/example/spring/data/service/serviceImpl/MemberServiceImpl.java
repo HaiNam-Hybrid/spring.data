@@ -6,6 +6,7 @@ import com.example.spring.data.model.MemberHired;
 import com.example.spring.data.repository.BookRepo;
 import com.example.spring.data.repository.MemberHiredRepo;
 import com.example.spring.data.repository.MemberRepo;
+import com.example.spring.data.security.jwt.JwtUtils;
 import com.example.spring.data.service.BookService;
 import com.example.spring.data.service.MemberService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +27,8 @@ public class MemberServiceImpl implements MemberService {
     MemberHiredRepo memberHiredRepo;
     @Autowired
     BookRepo bookRepo;
+    @Autowired
+    JwtUtils jwtUtils;
 
     public static BookService bookService;
     @Override
@@ -64,6 +67,7 @@ public class MemberServiceImpl implements MemberService {
         memberHiredList.stream().forEach(item -> {
             Book book = bookRepo.findById(item.getBookId()).orElseThrow(()->new NullPointerException("No book in database"));
             item.setBookName(book.getBookName());
+            item.setUnitPrice(book.getPrice());
             Long total = book.getQuantity();
             book.setQuantity(total - item.getQuantity());
             bookRepo.save(book);
@@ -116,5 +120,12 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public void giveBackBook(Long id) {
        memberHiredRepo.deleteById(id);
+    }
+
+    @Override
+    public Member getCurrentMember() {
+        String username = jwtUtils.currentUser();
+        Member currentMember = memberRepo.findByMemberName(username).orElseThrow(() -> new NullPointerException("No found member has username like this"));
+        return currentMember;
     }
 }

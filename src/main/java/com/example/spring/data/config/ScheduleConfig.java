@@ -17,8 +17,8 @@ public class ScheduleConfig {
 //    }
     @Autowired
     MemberService memberService;
-//test thu schedule job chay 10s 1 lan
-    @Scheduled(fixedRate = 10000)
+//test thu schedule job chay 1h 1 lan
+    @Scheduled(fixedRate = 3600000)
     public void scheduleFixedRateTask() {
         memberService.scheduleUpdateAll();
         System.out.println(
