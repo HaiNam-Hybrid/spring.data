@@ -3,6 +3,7 @@ package com.example.spring.data.api;
 import com.example.spring.data.model.Author;
 import com.example.spring.data.model.Book;
 import com.example.spring.data.model.Category;
+import com.example.spring.data.service.AmazonClient;
 import com.example.spring.data.service.AuthorService;
 import com.example.spring.data.service.BookService;
 import com.example.spring.data.service.CategoryService;
@@ -12,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.*;
 
@@ -25,6 +27,12 @@ public class BookResource {
     CategoryService categoryService;
     @Autowired
     AuthorService authorService;
+
+    private AmazonClient amazonClient;
+    @Autowired
+    BookResource(AmazonClient amazonClient) {
+        this.amazonClient = amazonClient;
+    }
 
     @GetMapping("/book/getAll")
     public ResponseEntity<List<Book>> getAllBooks() {
@@ -45,6 +53,16 @@ public class BookResource {
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_MODERATOR')")
     public ResponseEntity<List<Book>> createBook(@RequestBody List<Book> books) {
         List<Book> result = bookService.createBook(books);
+        return ResponseEntity.ok().body(result);
+    }
+
+    @PostMapping("/book/createNew")
+//    @PostMapping(value = "/book/createNew", consumes = {"application/json"})
+    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_MODERATOR')")
+    public ResponseEntity<Book> createNewBook(@RequestPart(value = "data") Book book, @RequestPart(value = "file") MultipartFile file) {
+        String url =this.amazonClient.uploadFile(file);
+        book.setAvatar(url);
+        Book result = bookService.creatNewBook(book);
         return ResponseEntity.ok().body(result);
     }
 

@@ -21,7 +21,9 @@ public class Book {
 
     private Long price;
 
-    @ManyToOne(fetch = FetchType.EAGER, optional = false, cascade=CascadeType.ALL)
+    private String avatar;
+
+    @ManyToOne(fetch = FetchType.EAGER, optional = false, cascade=CascadeType.MERGE)
     @JoinColumn(name = "author_id", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
 //    @JsonIgnore
@@ -42,6 +44,15 @@ public class Book {
         this.bookName = bookName;
         this.quantity = quantity;
         this.price = price;
+        this.author = author;
+        this.categories = categories;
+    }
+
+    public Book(String bookName, Long quantity, Long price, String avatar, Author author, Set<Category> categories) {
+        this.bookName = bookName;
+        this.quantity = quantity;
+        this.price = price;
+        this.avatar = avatar;
         this.author = author;
         this.categories = categories;
     }
@@ -72,6 +83,14 @@ public class Book {
 
     public Long getPrice() {
         return price;
+    }
+
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
     }
 
     public void setPrice(Long price) {

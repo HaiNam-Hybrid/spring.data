@@ -11,5 +11,6 @@ public interface BookService {
     Optional<Book> findById(Long id);
     List<Book> findAllBooks();
     List<Book> createBook(List<Book> books);
+    Book creatNewBook(Book book);
     Book updateBook(Book book);
 }
