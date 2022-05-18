@@ -33,6 +33,11 @@ public class TestController {
         return "Admin Board.";
     }
 
+    @GetMapping("/all/test")
+    public String test02() {
+        return "test Content.";
+    }
+
     @GetMapping("/test/all")
     public String testAll() {
         return "All Content.";
